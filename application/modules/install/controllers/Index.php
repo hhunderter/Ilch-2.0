@@ -361,7 +361,7 @@ class Index extends \Ilch\Controller\Frontend
     public function configurationAction()
     {
         $fields = ['usage' => '', 'adminName' => '', 'adminPassword' => '', 'adminPassword2' => '', 'adminEmail' => ''];
-        $systemModules = ['admin', 'article', 'user', 'media', 'comment', 'imprint', 'contact', 'privacy', 'statistic', 'cookieconsent'];
+        $systemModules = ['admin', 'article', 'user', 'media', 'comment', 'imprint', 'contact', 'privacy', 'statistic', 'cookieconsent', 'search'];
 
         if ($this->getRequest()->isPost()) {
             $validation = Validation::create($this->getRequest()->getPost(), [
@@ -540,6 +540,7 @@ class Index extends \Ilch\Controller\Frontend
         $modules['privacy']['types'] = [];
         $modules['cookieconsent']['types'] = [];
         $modules['statistic']['types'] = [];
+        $modules['search']['types'] = [];
 
         // Optional modules
         // calendar module needs to be installed early, so that the table calendar_events exists for modules that use it.

@@ -932,6 +932,43 @@ class Config extends \Ilch\Config\Install
                 break;
             case "2.1.53":
                 break;
+            case "2.1.54":
+                $moduleMapper = new \Modules\Admin\Mappers\Module();
+                $boxMapper = new \Modules\Admin\Mappers\Box();
+                $groupMapper = new \Modules\User\Mappers\Group();
+
+                if (!$moduleMapper->getModuleByKey('search')) {
+                    $configClass = '\\Modules\\' . ucfirst('search') . '\\Config\\Config';
+                    $config = new $configClass($this->getTranslator());
+                    $config->install();
+
+                    if (!empty($config->config)) {
+                        $moduleModel = new \Modules\Admin\Models\Module();
+                        $moduleModel->setKey($config->config['key']);
+                        $moduleModel->setSystemModule(true);
+                        $moduleModel->setIconSmall($config->config['icon_small']);
+
+                        foreach ($config->config['languages'] as $key => $value) {
+                            $moduleModel->addContent($key, $value);
+                        }
+                        $moduleMapper->save($moduleModel);
+
+                        $boxModel = new \Modules\Admin\Models\Box();
+                        $boxModel->setModule($config->config['key']);
+                        foreach ($config->config['boxes'] as $key => $value) {
+                            $boxModel->addContent($key, $value);
+                        }
+                        $boxMapper->install($boxModel);
+
+                        $groups = $groupMapper->getGroupList();
+                        foreach ($groups as $key => $group) {
+                            if ($group->getId() !== 1) {
+                                $groupMapper->saveAccessData($group->getId(), $key, 1, 'module');
+                            }
+                        }
+                    }
+                }
+                break;
         }
 
         return 'Update function executed.';
