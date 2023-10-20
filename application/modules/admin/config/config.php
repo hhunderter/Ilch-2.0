@@ -930,6 +930,8 @@ class Config extends \Ilch\Config\Install
                 // Update vendor folder
                 replaceVendorDirectory();
                 break;
+            case "2.1.53":
+                break;
         }
 
         return 'Update function executed.';
